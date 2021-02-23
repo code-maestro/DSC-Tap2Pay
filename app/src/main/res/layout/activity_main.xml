@@ -28,4 +28,15 @@
         app:layout_constraintStart_toStartOf="@+id/check"
         app:layout_constraintTop_toBottomOf="@+id/check" />
 
+    <Button
+        android:id="@+id/write_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="WRITE ACTIVITY"
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mButton;
+    Button mButton, writeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,10 +16,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mButton = findViewById(R.id.button);
+        writeBtn = findViewById(R.id.write_btn);
 
         mButton.setOnClickListener(v -> {
             startActivity(new Intent(this, TestActivity.class));
             //finish();
+        });
+
+        writeBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, WriteActivity.class));
         });
 
     }
