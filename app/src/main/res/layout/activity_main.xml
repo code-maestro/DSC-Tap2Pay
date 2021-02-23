@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="TEST ACTIVITY"
-        android:onClick="handleClick"
         app:layout_constraintEnd_toEndOf="@+id/check"
         app:layout_constraintStart_toStartOf="@+id/check"
         app:layout_constraintTop_toBottomOf="@+id/check" />
