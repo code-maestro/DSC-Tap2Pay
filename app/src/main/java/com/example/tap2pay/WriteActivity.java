@@ -10,9 +10,13 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,11 +28,18 @@ public class WriteActivity extends AppCompatActivity {
 
     private NfcAdapter nfc;
     private TextView writeTxt;
+    private EditText readTxt;
+    private ToggleButton tglBtn;
 
+    //ACTVITY LIFE CYCLE FUNCTIONS/METHODS TO HANDLE TRACK THE APP USAGE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write);
+
+        tglBtn = (ToggleButton) findViewById(R.id.readWrite);
+
+        readTxt = findViewById(R.id.read_txt);
 
         writeTxt = findViewById(R.id.write_txt);
         writeTxt.setText("🚀🚀🚀");
@@ -62,10 +73,21 @@ public class WriteActivity extends AppCompatActivity {
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            NdefMessage ndefMessage = createNdefMessage("420");
+            NdefMessage ndefMessage = createNdefMessage(readTxt.getText() + "420");
 
             writeNdefMessage(tag, ndefMessage);
 
+        }
+
+        if (tglBtn.isChecked()) {
+            Parcelable[] parcelables =
+                    intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (parcelables != null && parcelables.length > 0) {
+                readTextFromTag((NdefMessage) parcelables[0]);
+            } else {
+                Toast.makeText(this, "NO NDEF MESSAGE", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -86,9 +108,10 @@ public class WriteActivity extends AppCompatActivity {
     }
 
     private void disableForegroundDispatchSystem() {
-
+        nfc.disableForegroundDispatch(this);
     }
 
+    // FUNCTION TO DELETE AN CONTENT ON THE NFC TAG BEFORE WRITING THE NEW DATA
     private void formatTag(Tag tag, NdefMessage ndefMessage) {
 
         try {
@@ -152,7 +175,7 @@ public class WriteActivity extends AppCompatActivity {
             }
 
         } catch (Exception o) {
-
+            Log.e("writeNdefMessage: TAG NOT WRTITABLE", o.getMessage(), o);
         }
     }
 
@@ -177,7 +200,7 @@ public class WriteActivity extends AppCompatActivity {
                     payload.toByteArray());
 
         } catch (UnsupportedEncodingException o) {
-            Log.e("creating Text record", "createTextRecord: " + o.getMessage());
+            Log.e("creating Text record", "createTextRecord: " + o.getMessage(), o);
         }
 
         return null;
@@ -192,4 +215,51 @@ public class WriteActivity extends AppCompatActivity {
 
         return ndefMessage;
     }
+
+    //READING FUNCTIONS/METHODS
+    private void readWrite(View view) {
+        readTxt.setText(" 👀 👀 ");
+    }
+
+    private String getTextFromNdefRecord(NdefRecord ndefRecord) {
+
+        String tagContent = null;
+
+        try {
+
+            byte[] payload = ndefRecord.getPayload();
+
+            String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
+
+            int langaugeSize = payload[0] & 0063;
+
+            tagContent = new String(payload, langaugeSize + 1,
+                    payload.length - langaugeSize - 1, textEncoding);
+
+
+        } catch (UnsupportedEncodingException o) {
+            Log.e("getTextFromNdefRecord: ", o.getMessage(), o);
+        }
+
+        return tagContent;
+    }
+
+    private void readTextFromTag(NdefMessage ndefMessage) {
+
+        NdefRecord[] ndefRecords = ndefMessage.getRecords();
+
+        if (ndefRecords != null && ndefRecords.length > 0) {
+
+            NdefRecord ndefRecord = ndefRecords[0];
+
+            String tagContent = getTextFromNdefRecord(ndefRecord);
+
+            readTxt.setText(tagContent);
+
+        } else {
+            Toast.makeText(this, "NO NDEF RECORDS FOUND", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 }
