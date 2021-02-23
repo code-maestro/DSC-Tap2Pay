@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tap2pay">
 
+    <!-- THE NFC PERMISSION AND HARDWARE REQUIRED  -->
     <uses-permission android:name="android.permission.NFC" />
 
     <uses-feature
@@ -15,10 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TAP2PAY">
-        <activity android:name=".WriteActivity"></activity>
+        <activity
+            android:name=".WriteActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
+
         <activity
             android:name=".TestActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
