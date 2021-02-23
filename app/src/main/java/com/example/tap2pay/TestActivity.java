@@ -29,13 +29,14 @@ public class TestActivity extends AppCompatActivity {
         } else {
             welcome.setText("NFC NOT ENABLED 😌😌 NOTHING VIBES JUST ");
         }
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
 
         Toast.makeText(this, "NFC INTENT RECEIVED ", Toast.LENGTH_SHORT).show();
+
+        welcome.setText("NFC INTENT RECEIVED ");
 
         super.onNewIntent(intent);
     }

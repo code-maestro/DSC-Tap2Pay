@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         mButton.setOnClickListener(v -> {
             startActivity(new Intent(this, TestActivity.class));
-            finish();
+            //finish();
         });
 
     }
